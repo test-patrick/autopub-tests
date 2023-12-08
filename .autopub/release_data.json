@@ -1,1 +1,1 @@
-{"hash": "dbae789858c1330fea515d906e7793d9497cc9c3226b27adf7c52bbd779825b4", "release_type": "patch", "release_notes": "Hello world", "plugin_data": {"old_version": "0.8.0", "new_version": "0.8.1"}}
+{"hash": "99a803a9a39bde00870be74ccf6f13d271aa1317c0a9542ba680386bf5f21b26", "release_type": "patch", "release_notes": "This should become a GitHub release", "plugin_data": {"old_version": "0.8.1", "new_version": "0.8.2"}}
