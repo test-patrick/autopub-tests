@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import httpx
 import json
 import pathlib
 import functools
@@ -28,6 +29,9 @@ class GithubPlugin(AutopubPlugin):
     @property
     def is_pr(self) -> bool:
         return self.event.get("pull_request") is not None
+
+    def prepare(self, release_info: ReleaseInfo) -> None:
+        return super().prepare(release_info)
 
     def on_release_notes_invalid(self, exception: AutopubException):
         if not self.is_pr:
@@ -68,6 +72,49 @@ class GithubPlugin(AutopubPlugin):
 
         self._send_comment(text)
 
+    def post_publish(self, release_info: ReleaseInfo):
+        repo = self.github.get_repo(self.event["repository"]["full_name"])
+
+        version = release_info.additional_info["new_version"]
+
+        pr = self._get_source_pr()
+
+        number = pr["number"]
+        user = pr["user"]["login"]
+
+        message = release_info.release_notes
+
+        message += f"\n\nThis release was contributed by @{user} in PR #{number}."
+
+        repo.create_git_release(
+            tag=version,
+            name=version,
+            message=message,
+            draft=False,
+            prerelease=False,
+        )
+
+    def _get_source_pr(self):
+        sha = os.environ["GITHUB_SHA"]
+
+        repo = self.github.get_repo(self.event["repository"]["full_name"])
+
+        endpoint = f"https://api.github.com/repos/{repo.owner.login}/{repo.name}/commits/{sha}/pulls"
+
+        headers = {
+            "Authorization": f"token {os.environ['GITHUB_TOKEN']}",
+            "Accept": "application/vnd.github.groot-preview+json",
+        }
+        response = httpx.get(endpoint, headers=headers)
+
+        if response.status_code == 200:
+            pulls = response.json()
+            print("Found PRs:", pulls)
+
+            assert len(pulls) == 1
+
+            return pulls[0]
+
     def _send_comment(self, body: str):
         repo = self.github.get_repo(self.event["repository"]["full_name"])
         pr = repo.get_pull(self.event["pull_request"]["number"])
@@ -82,17 +129,3 @@ class GithubPlugin(AutopubPlugin):
                 return
 
         pr.create_issue_comment(message)
-
-    def post_publish(self, release_info: ReleaseInfo):
-        # create a new release on github
-        repo = self.github.get_repo(self.event["repository"]["full_name"])
-
-        version = release_info.additional_info["new_version"]
-
-        repo.create_git_release(
-            tag=version,
-            name=version,
-            message=release_info.release_notes,
-            draft=False,
-            prerelease=False,
-        )
