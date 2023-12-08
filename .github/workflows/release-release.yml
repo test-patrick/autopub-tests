@@ -35,7 +35,7 @@ jobs:
 
       - name: Prepare
         run: autopub -p autopub_plugins.github prepare
-        if: steps.check.outputs.ok == 'true'
+        if: steps.check.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
