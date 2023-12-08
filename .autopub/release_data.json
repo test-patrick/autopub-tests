@@ -1,1 +1,1 @@
-{"hash": "72c29d8fa5c579802fb111013e66c0d1fad56917205ddee78e9ea2d022c73c66", "release_type": "minor", "release_notes": "This is just an example", "plugin_data": {"old_version": "0.7.0", "new_version": "0.8.0"}}
+{"hash": "dbae789858c1330fea515d906e7793d9497cc9c3226b27adf7c52bbd779825b4", "release_type": "patch", "release_notes": "Hello world", "plugin_data": {"old_version": "0.8.0", "new_version": "0.8.1"}}
