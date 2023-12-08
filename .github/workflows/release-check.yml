@@ -6,9 +6,6 @@ on:
     types: [synchronize, reopened, opened, ready_for_review]
     branches:
       - main
-    paths:
-      - "strawberry/**"
-      - "pyproject.toml"
 
 jobs:
   check-release:
