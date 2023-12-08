@@ -35,17 +35,18 @@ jobs:
 
       - name: Prepare
         run: autopub -p autopub_plugins.github prepare
-        if: steps.check.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: autopub -p pdm -p autopub_plugins.github build
+        if: steps.check.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
         run: autopub -p pdm -p autopub_plugins.github publish
+        if: steps.check.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PDM_PUBLISH_USERNAME: __token__
