@@ -1,5 +1,5 @@
 ---
-release type: patch
+release type: a
 ---
 
-This is just an example 
+This is just an example
