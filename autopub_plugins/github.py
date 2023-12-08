@@ -27,7 +27,7 @@ class GithubPlugin(AutopubPlugin):
 
     @property
     def is_pr(self) -> bool:
-        return self.event["pull_request"] is not None
+        return self.event.get("pull_request") is not None
 
     def on_release_notes_invalid(self, exception: AutopubException):
         if not self.is_pr:
