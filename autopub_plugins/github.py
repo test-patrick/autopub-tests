@@ -82,3 +82,17 @@ class GithubPlugin(AutopubPlugin):
                 return
 
         pr.create_issue_comment(message)
+
+    def post_publish(self, release_info: ReleaseInfo):
+        # create a new release on github
+        repo = self.github.get_repo(self.event["repository"]["full_name"])
+
+        version = release_info.additional_info["new_version"]
+
+        repo.create_git_release(
+            tag=version,
+            name=version,
+            message=release_info.release_notes,
+            draft=False,
+            prerelease=False,
+        )
