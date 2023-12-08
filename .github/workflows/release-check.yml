@@ -23,20 +23,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: debug python
-        shell: python
-        run: |
-          import sys
-          import os
-          print(sys.version)
-          print(sys.path)
-          # current working directory
-          print(os.getcwd())
-      - name: print contents of current directory
-        run: ls -la
-
-      - name: Install autopub
-        run: pip install autopub==1.0.0-alpha.2
+      - name: Install autopub and plugins
+        run: pip install autopub==1.0.0-alpha.3 PyGithub
 
       - name: Check release
         run: autopub -p autopub_plugins.github check
