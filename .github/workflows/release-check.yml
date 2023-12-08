@@ -23,6 +23,16 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: debug python
+        shell: python
+        run: |
+          import sys
+          import os
+          print(sys.version)
+          print(sys.path)
+          # current working directory
+          print(os.getcwd())
+
       - name: Install autopub
         run: pip install autopub==1.0.0-alpha.2
 
