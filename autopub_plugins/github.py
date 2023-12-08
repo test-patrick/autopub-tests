@@ -114,7 +114,9 @@ class GithubPlugin(AutopubPlugin):
     def post_publish(self, release_info: ReleaseInfo):
         repo = self.github.get_repo(self.event["repository"]["full_name"])
 
-        version = release_info.additional_info["new_version"]
+        version = release_info.version
+
+        assert version is not None
 
         message = release_info.release_notes
 
