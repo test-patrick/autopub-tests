@@ -46,4 +46,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PDM_PUBLISH_USERNAME: __token__
-          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPY_TOKEN }}
+          PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
