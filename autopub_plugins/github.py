@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import json
 import pathlib
+import functools
 from github import Github
 from autopub.exceptions import AutopubException
 from autopub.types import ReleaseInfo
@@ -18,13 +19,20 @@ class GithubPlugin(AutopubPlugin):
 
         return Github(auth=auth)
 
-    @property
+    @functools.cached_property
     def event(self):
         path = os.environ["GITHUB_EVENT_PATH"]
 
         return json.loads(pathlib.Path(path).read_text())
 
+    @property
+    def is_pr(self) -> bool:
+        return self.event["pull_request"] is not None
+
     def on_release_notes_invalid(self, exception: AutopubException):
+        if not self.is_pr:
+            return
+
         text = textwrap.dedent(
             f"""
             Your release notes are invalid. Please fix them and try again.
@@ -40,6 +48,9 @@ class GithubPlugin(AutopubPlugin):
         self._send_comment(text)
 
     def on_release_notes_valid(self, release_info: ReleaseInfo):
+        if not self.is_pr:
+            return
+
         text = textwrap.dedent(
             f"""
             Your release notes look good!
