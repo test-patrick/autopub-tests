@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.10.11 - 2023-12-08
+--------------------
+
+ABC
+
+This release was contributed by @patrick91 in PR #6.
+
 0.10.10 - 2023-12-08
 --------------------
 
