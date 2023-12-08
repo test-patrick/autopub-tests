@@ -1,6 +1,6 @@
 [project]
 name = "autopub-test"
-version = "0.8.2"
+version = "0.8.7"
 description = ""
 authors = [
     {name = "Patrick Arminio", email = "patrick.arminio@gmail.com"},
@@ -18,4 +18,5 @@ build-backend = "pdm.backend"
 dev = [
     "autopub==1.0.0-alpha.2",
     "PyGithub>=2.1.1",
+    "httpx>=0.25.2",
 ]
