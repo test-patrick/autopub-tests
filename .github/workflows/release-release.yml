@@ -1,0 +1,42 @@
+name: 🆙 Release file check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-release:
+    name: Release check
+    runs-on: ubuntu-latest
+
+    # TODO: skip if there's no release file
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install autopub and plugins
+        run: pip install autopub==1.0.0-alpha.4 PyGithub
+
+      - name: Check release
+        run: autopub -p autopub_plugins.github check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare
+        run: autopub -p autopub_plugins.github prepare
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        run: autopub -p autopub_plugins.github release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
