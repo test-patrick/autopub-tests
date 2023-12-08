@@ -32,6 +32,8 @@ jobs:
           print(sys.path)
           # current working directory
           print(os.getcwd())
+      - name: print contents of current directory
+        run: ls -la
 
       - name: Install autopub
         run: pip install autopub==1.0.0-alpha.2
