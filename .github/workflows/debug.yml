@@ -1,0 +1,21 @@
+name: 🆙 Debug
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-release:
+    name: Debug
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: Debug
+        run: |
+          echo $(cat $GITHUB_EVENT_PATH)
