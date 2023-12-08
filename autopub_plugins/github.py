@@ -50,21 +50,18 @@ class GithubPlugin(AutopubPlugin):
         return self.event.get("pull_request") is not None
 
     @functools.cached_property
-    def pr(self) -> dict[str, Any] | None:
-        if not self.is_pr:
-            return None
-
+    def source_pr(self) -> dict[str, Any] | None:
         repo = self.github.get_repo(self.event["repository"]["full_name"])
 
         return _get_pull_request_from_sha(repo, sha=os.environ["GITHUB_SHA"])
 
     @property
     def additional_message(self) -> str | None:
-        if not self.pr:
+        if not self.source_pr:
             return None
 
-        user = self.pr["user"]["login"]
-        number = self.pr["number"]
+        user = self.source_pr["user"]["login"]
+        number = self.source_pr["number"]
 
         return f"This release was contributed by @{user} in PR #{number}."
 
