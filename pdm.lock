@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform"]
 lock_version = "4.4"
-content_hash = "sha256:6b53b74e782383f1677a1a8f8ff03abc5e35b55019a07cc0c493591dd44ba1f3"
+content_hash = "sha256:8de9c106f06d2228d982a70d6be0c007b4df31ed6ae7033a0821921367708f83"
 
 [[package]]
 name = "anyio"
@@ -23,7 +23,7 @@ files = [
 
 [[package]]
 name = "autopub"
-version = "1.0.0a2"
+version = "1.0.0a16"
 requires_python = ">=3.8,<4.0"
 summary = "Automatic package release upon pull request merge"
 dependencies = [
@@ -37,8 +37,8 @@ dependencies = [
     "typer<0.10.0,>=0.9.0",
 ]
 files = [
-    {file = "autopub-1.0.0a2-py3-none-any.whl", hash = "sha256:516d6975ef8daab9b8d3525c8cf75dabc4c22adba4d5ddeca5774d642ff5a9c8"},
-    {file = "autopub-1.0.0a2.tar.gz", hash = "sha256:a320acec49de5fd1d3bfdf745591689b7ec55cd20e4211c9e4e015ac1b493167"},
+    {file = "autopub-1.0.0a16-py3-none-any.whl", hash = "sha256:9899808005a5ea95adc7c21cb621ee92ba00f4057849c762ab47c1518587ee8c"},
+    {file = "autopub-1.0.0a16.tar.gz", hash = "sha256:98b214c97c5baa22f67beab841a222a815c967061a279be53ce5eaf3c22adce2"},
 ]
 
 [[package]]
