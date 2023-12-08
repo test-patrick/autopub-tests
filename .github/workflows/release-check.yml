@@ -1,0 +1,33 @@
+name: 🆙 Release file check
+
+on:
+  # TODO: change this to pull_request_target once ready
+  pull_request:
+    types: [synchronize, reopened, opened, ready_for_review]
+    branches:
+      - main
+    paths:
+      - "strawberry/**"
+      - "pyproject.toml"
+
+jobs:
+  check-release:
+    name: Release check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          show-progress: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install autopub
+        run: pip install autopub==1.0.0-alpha.1
+
+      - name: Check release
+        run: autopub check
