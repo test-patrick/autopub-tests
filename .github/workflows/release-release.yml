@@ -28,11 +28,13 @@ jobs:
 
       - name: Check release
         run: autopub -p autopub_plugins.github check
+        id: check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare
         run: autopub -p autopub_plugins.github prepare
+        if: steps.check.outputs.ok == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
