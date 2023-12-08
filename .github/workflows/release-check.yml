@@ -27,4 +27,4 @@ jobs:
         run: pip install autopub==1.0.0-alpha.2
 
       - name: Check release
-        run: autopub check
+        run: autopub -p autopub_plugins.github check
