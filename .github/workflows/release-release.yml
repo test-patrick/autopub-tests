@@ -1,9 +1,7 @@
 name: 🆙 Release file check
 
 on:
-  # TODO: change this to pull_request_target once ready
-  pull_request:
-    types: [synchronize, reopened, opened, ready_for_review]
+  push:
     branches:
       - main
 
@@ -11,6 +9,8 @@ jobs:
   check-release:
     name: Release check
     runs-on: ubuntu-latest
+
+    # TODO: skip if there's no release file
 
     steps:
       - name: Checkout code
@@ -28,5 +28,15 @@ jobs:
 
       - name: Check release
         run: autopub -p autopub_plugins.github check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Prepare
+        run: autopub -p autopub_plugins.github prepare
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        run: autopub -p autopub_plugins.github release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
