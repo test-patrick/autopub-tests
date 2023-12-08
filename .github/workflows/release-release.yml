@@ -36,12 +36,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Release
-        run: autopub -p autopub_plugins.github build
+      - name: Build
+        run: autopub -p pdm autopub_plugins.github build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
-        run: autopub -p autopub_plugins.github publish
+        run: autopub -p pdm autopub_plugins.github publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
