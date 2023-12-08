@@ -16,7 +16,7 @@ build-backend = "pdm.backend"
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "autopub==1.0.0-alpha.16",
+    "autopub==1.0.0-alpha.17",
     "PyGithub>=2.1.1",
     "httpx>=0.25.2",
 ]
