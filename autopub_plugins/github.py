@@ -55,19 +55,27 @@ class GithubPlugin(AutopubPlugin):
 
         return _get_pull_request_from_sha(repo, sha=os.environ["GITHUB_SHA"])
 
-    @property
-    def additional_message(self) -> str | None:
+    def get_additional_message(self, with_links: bool = False) -> str | None:
         if not self.source_pr:
             return None
 
         user = self.source_pr["user"]["login"]
         number = self.source_pr["number"]
 
-        return f"This release was contributed by @{user} in PR #{number}."
+        if with_links:
+            user = f"[@{user}](https://github.com/{user})"
+            number = f"[#{number}]({self.source_pr['html_url']})"
+        else:
+            user = f"@{user}"
+            number = f"#{number}"
+
+        return f"This release was contributed by {user} in PR #{number}."
 
     def prepare(self, release_info: ReleaseInfo) -> None:
-        if self.additional_message is not None:
-            release_info.additional_release_notes.append(self.additional_message)
+        additional_message = self.get_additional_message(with_links=True)
+
+        if additional_message is not None:
+            release_info.additional_release_notes.append(additional_message)
 
     def on_release_notes_invalid(self, exception: AutopubException):
         if not self.is_pr:
@@ -117,8 +125,10 @@ class GithubPlugin(AutopubPlugin):
 
         message = release_info.release_notes
 
-        if self.additional_message is not None:
-            message += "\n\n" + self.additional_message
+        additional_message = self.get_additional_message()
+
+        if additional_message is not None:
+            message += "\n\n" + additional_message
 
         repo.create_git_release(
             tag=version,
