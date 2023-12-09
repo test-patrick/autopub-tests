@@ -1,5 +1,5 @@
 ---
-Release type: patch
+release type: patch
 ---
 
 A
