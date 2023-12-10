@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+0.10.15 - 2023-12-10
+--------------------
+
+hello world
+
+This release was contributed by [@patrick91](https://github.com/patrick91) and [@botberry](https://github.com/botberry) in PR [#10](https://github.com/test-patrick/autopub-tests/pull/10).
+Thanks to [@botberry](https://github.com/botberry) for reviewing!
+
 0.10.14 - 2023-12-10
 --------------------
 
