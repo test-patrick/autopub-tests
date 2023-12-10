@@ -2,4 +2,4 @@
 release type: patch
 ---
 
-hello
+hello world
