@@ -7,6 +7,7 @@ import pathlib
 import functools
 from typing import Any
 from github import Github
+from github.PullRequest import PullRequest
 from github.Repository import Repository
 from typing import Set
 from autopub.exceptions import AutopubException
@@ -69,48 +70,61 @@ class GithubPlugin(AutopubPlugin):
 
         return f"{', '.join(items[:-1])}, and {items[-1]}"
 
+    def _get_contributors(self, pull_request: PullRequest) -> list[str]:
+        contributors_set: Set[str] = set()
+
+        commits = pull_request.get_commits()
+
+        for commit in commits:
+            if commit.author.login == pull_request.user.login:
+                continue
+
+            contributors_set.add(commit.author.login)
+
+        reviews = pull_request.get_reviews()
+
+        for review in reviews:
+            contributors_set.add(review.user.login)
+
+        return [pull_request.user.login] + sorted(contributors_set)
+
+    def _get_reviewers(self, pull_request: PullRequest) -> list[str]:
+        reviewers_set: Set[str] = set()
+
+        reviews = pull_request.get_reviews()
+
+        for review in reviews:
+            reviewers_set.add(review.user.login)
+
+        return sorted(reviewers_set)
+
     def get_additional_message(self, with_links: bool = False) -> str | None:
         if not self.source_pr:
             return None
 
         pr = self.repo.get_pull(self.source_pr["number"])
 
-        user = self.source_pr["user"]["login"]
-        number = self.source_pr["number"]
-
-        contributors_set: Set[str] = set()
-
-        commits = pr.get_commits()
-
-        for commit in commits:
-            contributors_set.add(commit.author.login)
-
-        reviewers_set: Set[str] = set()
-
-        reviews = pr.get_reviews()
-        for review in reviews:
-            reviewers_set.add(review.user.login)
-
         def _get_user_link(user: str) -> str:
             return f"[@{user}](https://github.com/{user})"
 
         if with_links:
+            number = f"[#{pr.number}]({pr.html_url})"
             contributors = self._join_with_oxford_commas(
-                [user] + [_get_user_link(user) for user in sorted(contributors_set)]
+                [_get_user_link(user) for user in self._get_contributors(pr)]
             )
-            number = f"[#{number}]({self.source_pr['html_url']})"
             reviewers = self._join_with_oxford_commas(
-                [_get_user_link(user) for user in sorted(reviewers_set)]
+                [_get_user_link(user) for user in self._get_reviewers(pr)]
             )
 
         else:
-            contributors = self._join_with_oxford_commas(
-                [user] + sorted(contributors_set)
-            )
-            number = f"#{number}"
-            reviewers = self._join_with_oxford_commas(sorted(reviewers_set))
+            reviewers = self._join_with_oxford_commas(self._get_reviewers(pr))
+            contributors = self._join_with_oxford_commas(self._get_contributors(pr))
+            number = f"#{pr.number}"
 
-        return f"This release was contributed by {contributors} in PR {number}. Thanks to {reviewers} for reviewing!"
+        return (
+            f"This release was contributed by {contributors} in PR {number}.\n"
+            f"Thanks to {reviewers} for reviewing!"
+        )
 
     def prepare(self, release_info: ReleaseInfo) -> None:
         additional_message = self.get_additional_message(with_links=True)
