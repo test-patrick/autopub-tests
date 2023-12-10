@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.10.16 - 2023-12-10
+--------------------
+
+Split
+
+This release was contributed by [@patrick91](https://github.com/patrick91) in PR [#12](https://github.com/test-patrick/autopub-tests/pull/12).
+
 0.10.15 - 2023-12-10
 --------------------
 
