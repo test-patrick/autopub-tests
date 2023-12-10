@@ -55,6 +55,8 @@ class GithubPRCommentPlugin(BaseGithubPlugin, AutopubPlugin):
         self._send_comment(text)
 
     def on_release_notes_valid(self, release_info: ReleaseInfo):
+        print("on_release_notes_valid")
+
         if not self.is_pr:
             return
 
