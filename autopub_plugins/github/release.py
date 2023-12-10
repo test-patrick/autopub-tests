@@ -12,7 +12,6 @@ class GithubReleasePlugin(BaseGithubPlugin, AutopubPlugin):
         additional_message = self.get_additional_message(with_links=True)
 
         if additional_message is not None:
-            print("appending additional message", additional_message)
             release_info.additional_release_notes.append(additional_message)
 
     def post_publish(self, release_info: ReleaseInfo):
