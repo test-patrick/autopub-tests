@@ -40,3 +40,6 @@ class GithubReleasePlugin(BaseGithubPlugin, AutopubPlugin):
             release_url = f"[{release.title}]({release.html_url})"
 
             pr.create_issue_comment(f"🎉 This PR was included in {release_url} 🎉")
+
+
+__all__ = ["GithubReleasePlugin"]
