@@ -49,6 +49,10 @@ class GithubPlugin(AutopubPlugin):
     def is_pr(self) -> bool:
         return self.event.get("pull_request") is not None
 
+    @property
+    def repo(self) -> Repository:
+        return self.github.get_repo(self.event["repository"]["full_name"])
+
     @functools.cached_property
     def source_pr(self) -> dict[str, Any] | None:
         repo = self.github.get_repo(self.event["repository"]["full_name"])
@@ -69,7 +73,7 @@ class GithubPlugin(AutopubPlugin):
             user = f"@{user}"
             number = f"#{number}"
 
-        return f"This release was contributed by {user} in PR #{number}."
+        return f"This release was contributed by {user} in PR {number}."
 
     def prepare(self, release_info: ReleaseInfo) -> None:
         additional_message = self.get_additional_message(with_links=True)
@@ -117,8 +121,6 @@ class GithubPlugin(AutopubPlugin):
         self._send_comment(text)
 
     def post_publish(self, release_info: ReleaseInfo):
-        repo = self.github.get_repo(self.event["repository"]["full_name"])
-
         version = release_info.version
 
         assert version is not None
@@ -130,7 +132,7 @@ class GithubPlugin(AutopubPlugin):
         if additional_message is not None:
             message += "\n\n" + additional_message
 
-        repo.create_git_release(
+        self.repo.create_git_release(
             tag=version,
             name=version,
             message=message,
@@ -138,9 +140,13 @@ class GithubPlugin(AutopubPlugin):
             prerelease=False,
         )
 
+        if self.source_pr:
+            pr = self.repo.get_pull(self.source_pr["number"])
+
+            pr.create_issue_comment(f"🎉 This PR was included in version {version} 🎉")
+
     def _send_comment(self, body: str):
-        repo = self.github.get_repo(self.event["repository"]["full_name"])
-        pr = repo.get_pull(self.event["pull_request"]["number"])
+        pr = self.repo.get_pull(self.event["pull_request"]["number"])
 
         comment_signature = "<!-- autopub-release-check ✨ -->"
 
