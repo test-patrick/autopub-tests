@@ -64,8 +64,6 @@ class GithubPRCommentPlugin(BaseGithubPlugin, AutopubPlugin):
             release_notes=release_info.release_notes,
         )
 
-        text += "\n\n" + release_info.release_notes
-
         self._send_comment(text)
 
     def _find_previous_comment(self) -> IssueComment | None:
