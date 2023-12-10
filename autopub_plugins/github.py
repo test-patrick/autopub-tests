@@ -86,6 +86,7 @@ class GithubPlugin(AutopubPlugin):
             contributors_set.add(commit.author.login)
 
         reviewers_set: Set[str] = set()
+
         reviews = pr.get_reviews()
         for review in reviews:
             reviewers_set.add(review.user.login)
