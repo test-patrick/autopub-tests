@@ -98,36 +98,50 @@ class BaseGithubPlugin(AutopubPlugin):
 
         return sorted(reviewers_set)
 
+    def _get_user_link(self, user: str) -> str:
+        return f"[@{user}](https://github.com/{user})"
+
+    def _get_reviews_message(
+        self, pr: PullRequest, with_links: bool = False
+    ) -> str | None:
+        reviewers = self._get_reviewers(pr)
+
+        if not reviewers:
+            return None
+
+        if with_links:
+            reviewers_text = join_with_oxford_commas(
+                [self._get_user_link(user) for user in reviewers]
+            )
+        else:
+            reviewers_text = join_with_oxford_commas(reviewers, prefix="@")
+
+        return f"Thanks to {reviewers_text} for reviewing!"
+
     def get_additional_message(self, with_links: bool = False) -> str | None:
         if not self.source_pr:
             return None
 
         pr = self.repo.get_pull(self.source_pr["number"])
 
-        def _get_user_link(user: str) -> str:
-            return f"[@{user}](https://github.com/{user})"
-
         contributors = self._get_contributors(pr)
-        reviewers = self._get_reviewers(pr)
 
         if with_links:
             number_text = f"[#{pr.number}]({pr.html_url})"
             contributors_text = join_with_oxford_commas(
-                [_get_user_link(user) for user in contributors]
-            )
-            reviewers_text = join_with_oxford_commas(
-                [_get_user_link(user) for user in reviewers]
+                [self._get_user_link(user) for user in contributors]
             )
 
         else:
-            reviewers_text = join_with_oxford_commas(reviewers, prefix="@")
             contributors_text = join_with_oxford_commas(contributors, prefix="@")
             number_text = f"#{pr.number}"
 
+        reviews_text = self._get_reviews_message(pr, with_links=with_links)
+
         return (
             f"This release was contributed by {contributors_text} in PR {number_text}.\n"
-            f"Thanks to {reviewers_text} for reviewing!"
-        )
+            f"{reviews_text or ''}"
+        ).strip()
 
     def _send_comment(self, body: str):
         pr = self.repo.get_pull(self.event["pull_request"]["number"])
