@@ -27,6 +27,6 @@ jobs:
         run: pip install autopub==1.0.0-alpha.17 PyGithub httpx
 
       - name: Check release
-        run: autopub -p autopub_plugins.github check
+        run: autopub -p autopub_plugins.github.PRCommentPlugin -p autopub_plugins.github.ReleasePlugin check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
