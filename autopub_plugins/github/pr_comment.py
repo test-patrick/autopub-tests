@@ -90,3 +90,6 @@ class GithubPRCommentPlugin(BaseGithubPlugin, AutopubPlugin):
             return
 
         pr.create_issue_comment(message)
+
+
+__all__ = ["GithubPRCommentPlugin"]
