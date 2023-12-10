@@ -132,7 +132,7 @@ class GithubPlugin(AutopubPlugin):
         if additional_message is not None:
             message += "\n\n" + additional_message
 
-        self.repo.create_git_release(
+        release = self.repo.create_git_release(
             tag=version,
             name=version,
             message=message,
@@ -143,7 +143,9 @@ class GithubPlugin(AutopubPlugin):
         if self.source_pr:
             pr = self.repo.get_pull(self.source_pr["number"])
 
-            pr.create_issue_comment(f"🎉 This PR was included in version {version} 🎉")
+            release_url = f"[{release.title}]({release.html_url})"
+
+            pr.create_issue_comment(f"🎉 This PR was included in {release_url} 🎉")
 
     def _send_comment(self, body: str):
         pr = self.repo.get_pull(self.event["pull_request"]["number"])
