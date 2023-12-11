@@ -1,8 +1,7 @@
 name: 🆙 Release file check
 
 on:
-  # TODO: change this to pull_request_target once ready
-  pull_request:
+  pull_request_target:
     types: [synchronize, reopened, opened, ready_for_review]
     branches:
       - main
