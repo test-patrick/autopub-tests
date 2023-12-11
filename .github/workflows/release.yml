@@ -1,4 +1,4 @@
-name: 🆙 Release file check
+name: 🆙 Release
 
 on:
   push:
@@ -29,24 +29,24 @@ jobs:
         id: check
         continue-on-error: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
 
       - name: Prepare
         if: steps.check.outcome == 'success'
         run: autopub -p autopub_plugins.github.all prepare
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
 
       - name: Build
         run: autopub -p pdm -p autopub_plugins.github.all build
         if: steps.check.outcome == 'success'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
 
       - name: Release
         run: autopub -p pdm -p autopub_plugins.github.all publish
         if: steps.check.outcome == 'success'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
           PDM_PUBLISH_USERNAME: __token__
           PDM_PUBLISH_PASSWORD: ${{ secrets.PYPI_TOKEN }}
