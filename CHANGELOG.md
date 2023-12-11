@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+0.10.26 - 2023-12-11
+--------------------
+
+:)
+
+This release was contributed by [@strawberrytest](https://github.com/strawberrytest) in PR [#16](https://github.com/test-patrick/autopub-tests/pull/16).
+
 0.10.25 - 2023-12-11
 --------------------
 
