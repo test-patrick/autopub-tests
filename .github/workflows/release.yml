@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: Release check
+    name: Release
     runs-on: ubuntu-latest
 
     steps:
