@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import os
-import httpx
 import json
 import pathlib
 import functools
-from typing import Any
 from github import Github
 from github.PullRequest import PullRequest
 from github.Repository import Repository
@@ -24,23 +22,6 @@ def join_with_oxford_commas(items: list[str], prefix: str = "") -> str:
         return f"{items[0]} and {items[1]}"
 
     return f"{', '.join(items[:-1])}, and {items[-1]}"
-
-
-def get_pull_request_from_sha(repo: Repository, sha: str):
-    endpoint = f"https://api.github.com/repos/{repo.owner.login}/{repo.name}/commits/{sha}/pulls"
-
-    headers = {
-        "Authorization": f"token {os.environ['GITHUB_TOKEN']}",
-        "Accept": "application/vnd.github.groot-preview+json",
-    }
-    response = httpx.get(endpoint, headers=headers)
-
-    response.raise_for_status()
-    pulls = response.json()
-
-    assert len(pulls) == 1
-
-    return pulls[0]
 
 
 class BaseGithubPlugin(AutopubPlugin):
@@ -65,10 +46,19 @@ class BaseGithubPlugin(AutopubPlugin):
         return self.github.get_repo(self.event["repository"]["full_name"])
 
     @functools.cached_property
-    def source_pr(self) -> dict[str, Any] | None:
+    def source_pr(self) -> PullRequest | None:
+        sha = os.environ["GITHUB_SHA"]
+
         repo = self.github.get_repo(self.event["repository"]["full_name"])
 
-        return get_pull_request_from_sha(repo, sha=os.environ["GITHUB_SHA"])
+        pulls = repo.get_commit(sha).get_pulls()
+
+        if pulls.totalCount == 0:
+            return None
+
+        assert pulls.totalCount == 1
+
+        return pulls[0]
 
     def _get_contributors(self, pull_request: PullRequest) -> list[str]:
         contributors_set: Set[str] = set()
@@ -119,10 +109,8 @@ class BaseGithubPlugin(AutopubPlugin):
         return f"Thanks to {reviewers_text} for reviewing!"
 
     def get_additional_message(self, with_links: bool = False) -> str | None:
-        if not self.source_pr:
+        if not (pr := self.source_pr):
             return None
-
-        pr = self.repo.get_pull(self.source_pr["number"])
 
         contributors = self._get_contributors(pr)
 

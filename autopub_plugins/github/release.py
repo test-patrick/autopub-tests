@@ -34,9 +34,7 @@ class GithubReleasePlugin(BaseGithubPlugin, AutopubPlugin):
             prerelease=False,
         )
 
-        if self.source_pr:
-            pr = self.repo.get_pull(self.source_pr["number"])
-
+        if pr := self.source_pr:
             release_url = f"[{release.title}]({release.html_url})"
 
             pr.create_issue_comment(f"🎉 This PR was included in {release_url} 🎉")
