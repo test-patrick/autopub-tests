@@ -1,6 +1,6 @@
 [project]
 name = "autopub-test"
-version = "0.10.21"
+version = "0.10.22"
 description = ""
 authors = [
     {name = "Patrick Arminio", email = "patrick.arminio@gmail.com"},
