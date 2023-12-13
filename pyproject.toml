@@ -23,3 +23,17 @@ plugins = [
     "autopub_plugins.github.release",
     "autopub_plugins.github.pr_comment",
 ]
+
+[tool.autopub.github_invite_contributor]
+organisation = "test-patrick"
+team_slug = "people"
+comment_template = """
+Hi $user! Thanks for your contribution to this project.
+
+You've been invited to join our organisation 😊
+"""
+
+[tool.autopub.github_pr_comment]
+comment_template = """
+Hi $user! Thanks for your contribution to this project.
+"""
