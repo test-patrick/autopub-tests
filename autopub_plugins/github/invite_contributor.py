@@ -5,6 +5,8 @@ from autopub.plugins import AutopubPlugin
 import string
 import textwrap
 
+from pydantic import BaseModel
+
 from ._base_github import BaseGithubPlugin
 
 
@@ -17,13 +19,17 @@ BOTS = [
 
 
 class GithubInviteContributorPlugin(BaseGithubPlugin, AutopubPlugin):
-    organisation = "test-patrick"
-    team_slug = "people"
+    id = "github_invite_contributor"
+
+    class Config(BaseModel):
+        organisation: str
+        team_slug: str
+        comment_template: str
 
     invite_template = string.Template(
         textwrap.dedent(
             """
-            Hi @{user},
+            Hi @$user,
 
             Thanks for your contribution to Strawberry 🍓!
 
