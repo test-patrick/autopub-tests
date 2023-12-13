@@ -7,11 +7,17 @@ from autopub.plugins import AutopubPlugin
 import string
 
 from github.IssueComment import IssueComment
-
+from pydantic import BaseModel
 from ._base_github import BaseGithubPlugin
 
 
 class GithubPRCommentPlugin(BaseGithubPlugin, AutopubPlugin):
+    id: str = "github_pr_comment"
+
+    class Config(BaseModel):
+        comment_template: str
+        comment_signature: str = "<!-- autopub-release-check ✨ -->"
+
     comment_signature = "<!-- autopub-release-check ✨ -->"
 
     # TODO: should we show an example of a valid release?
