@@ -24,9 +24,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install autopub and plugins
-        run: pip install autopub==1.0.0-alpha.18 PyGithub httpx
+        run: pip install autopub==1.0.0-alpha.20 PyGithub httpx
 
       - name: Check release
-        run: autopub -p autopub_plugins.github.all check
+        run: autopub check
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}

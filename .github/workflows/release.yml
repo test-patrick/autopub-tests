@@ -22,10 +22,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install autopub and plugins
-        run: pip install autopub==1.0.0-alpha.18 PyGithub httpx pdm
+        run: pip install autopub==1.0.0-alpha.20 PyGithub httpx pdm
 
       - name: Check release
-        run: autopub -p autopub_plugins.github.all check
+        run: autopub check
         id: check
         continue-on-error: true
         env:
@@ -33,18 +33,18 @@ jobs:
 
       - name: Prepare
         if: steps.check.outcome == 'success'
-        run: autopub -p autopub_plugins.github.all prepare
+        run: autopub prepare
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
 
       - name: Build
-        run: autopub -p pdm -p autopub_plugins.github.all build
+        run: autopub build
         if: steps.check.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
 
       - name: Release
-        run: autopub -p pdm -p autopub_plugins.github.all publish
+        run: autopub publish
         if: steps.check.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.AUTOPUB_GITHUB_TOKEN }}
